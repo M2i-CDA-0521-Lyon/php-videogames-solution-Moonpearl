@@ -11,6 +11,8 @@ $statement = $databaseHandler->query('SELECT
     `game`.`title`,
     `game`.`release_date`,
     `game`.`link`,
+    `game`.`developer_id`,
+    `game`.`platform_id`,
     `developer`.`name` as `developer_name`,
     `developer`.`link` as `developer_link`,
     `platform`.`name` as `platform_name`,
@@ -74,29 +76,69 @@ $platforms = $statement->fetchAll();
                 </thead>
                 <tbody>
                     <?php foreach ($games as $game): ?>
-                    <tr>
-                        <th scope="row"><?= $game['id'] ?></th>
-                        <td>
-                            <a href="<?= $game['link'] ?>" target="_blank"><?= $game['title'] ?></a>
-                        </td>
-                        <td><?php $date = new DateTime($game['release_date']); echo $date->format('F j, Y') ?></td>
-                        <td>
-                            <a href="<?= $game['developer_link'] ?>" target="_blank"><?= $game['developer_name'] ?></a>
-                        </td>
-                        <td>
-                            <a href="<?= $game['platform_link'] ?>" target="_blank"><?= $game['platform_name'] ?></a>
-                        </td>
-                        <td>
-                            <button class="btn btn-primary btn-sm">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </td>
-                        <td>
-                            <button class="btn btn-danger btn-sm">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </td>
-                    </tr>
+                        <?php if (isset($_GET['edit']) && $_GET['edit'] === $game['id']): ?>
+                        <form method="post" action="actions/update-game.php">
+                            <input type="hidden" name="id" value="<?= $game['id'] ?>" />
+                            <tr>
+                                <th scope="row"><?= $game['id'] ?></th>
+                                <td>
+                                    <input type="text" name="title" placeholder="Title" value="<?= $game['title'] ?>" />
+                                    <br />
+                                    <input type="text" name="link" placeholder="External link" value="<?= $game['link'] ?>" />
+                                </td>
+                                <td>
+                                    <input type="date" name="release_date" value="<?= $game['release_date'] ?>" />
+                                </td>
+                                <td>
+                                    <select name="developer">
+                                        <?php foreach ($developers as $developer): ?>
+                                        <option value="<?= $developer['id'] ?>" <?php if ($developer['id'] === $game['developer_id']) echo 'selected' ?>><?= $developer['name'] ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="platform">
+                                        <?php foreach ($platforms as $platform): ?>
+                                        <option value="<?= $platform['id'] ?>" <?php if ($platform['id'] === $game['platform_id']) echo 'selected' ?>><?= $platform['name'] ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </form>
+                        <?php else: ?>
+                        <tr>
+                            <th scope="row"><?= $game['id'] ?></th>
+                            <td>
+                                <a href="<?= $game['link'] ?>" target="_blank"><?= $game['title'] ?></a>
+                            </td>
+                            <td><?php $date = new DateTime($game['release_date']); echo $date->format('F j, Y') ?></td>
+                            <td>
+                                <a href="<?= $game['developer_link'] ?>" target="_blank"><?= $game['developer_name'] ?></a>
+                            </td>
+                            <td>
+                                <a href="<?= $game['platform_link'] ?>" target="_blank"><?= $game['platform_name'] ?></a>
+                            </td>
+                            <td>
+                                <form>
+                                    <input type="hidden" name="edit" value="<?= $game['id'] ?>" />
+                                    <button type="submit" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </form>
+                            </td>
+                            <td>
+                                <button class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <?php endif; ?>
                     <?php endforeach; ?>
                     <form method="post" action="actions/create-game.php">
                         <tr>
