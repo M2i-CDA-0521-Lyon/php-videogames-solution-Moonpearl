@@ -1,5 +1,10 @@
 <?php
 
+$errorMessages = [
+    2 => 'Form should not have empty fields.',
+    22001 => 'Form field value is too long.',
+];
+
 $databaseHandler = new PDO('mysql:host=localhost;dbname=videogames', 'root', 'root');
 $statement = $databaseHandler->query('SELECT
     `game`.`id`,
@@ -36,6 +41,22 @@ $platforms = $statement->fetchAll();
     <div class="container">
         <div class="card text-center">
             <img src="images/data-original.jpg" class="card-img-top" alt="Retro gaming banner">
+            <?php if (isset($_GET['error'])): ?>
+                <!-- Si un code d'erreur a été envoyé dans les query parameters, il faut afficher une alerte -->
+                <div class="alert alert-danger">
+                    <?php
+                    
+                    // Si un message spécifique a été prévu pour ce code d'erreur, l'affiche
+                    if (isset($errorMessages[$_GET['error']])) {
+                        echo $errorMessages[$_GET['error']];
+                    // Sinon, affiche un message d'erreur générique
+                    } else {
+                        echo 'There was an error processing your form.';
+                    }
+
+                    ?>
+                </div>
+            <?php endif; ?>
             <div class="card-header">
                 <h1 class="mt-4 mb-4">My beautiful video games</h1>
             </div>
