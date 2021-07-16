@@ -71,7 +71,7 @@ $games = $statement->fetchAll();
                         </td>
                     </tr>
                     <?php endforeach; ?>
-                    <form>
+                    <form method="post" action="actions/create-game.php">
                         <tr>
                             <th scope="row"></th>
                             <td>
