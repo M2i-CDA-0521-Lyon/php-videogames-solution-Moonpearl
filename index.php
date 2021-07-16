@@ -77,7 +77,7 @@ $platforms = $statement->fetchAll();
                 <tbody>
                     <?php foreach ($games as $game): ?>
                         <?php if (isset($_GET['edit']) && $_GET['edit'] === $game['id']): ?>
-                        <form method="post" action="actions/update-game.php">
+                        <form method="post" action="actions/edit-game.php">
                             <input type="hidden" name="id" value="<?= $game['id'] ?>" />
                             <tr>
                                 <th scope="row"><?= $game['id'] ?></th>
@@ -143,7 +143,7 @@ $platforms = $statement->fetchAll();
                         </tr>
                         <?php endif; ?>
                     <?php endforeach; ?>
-                    <form method="post" action="actions/create-game.php">
+                    <form method="post" action="actions/edit-game.php">
                         <tr>
                             <th scope="row"></th>
                             <td>
