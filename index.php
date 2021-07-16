@@ -15,6 +15,12 @@ JOIN `developer` ON `game`.`developer_id` = `developer`.`id`
 JOIN `platform` ON `game`.`platform_id` = `platform`.`id`');
 $games = $statement->fetchAll();
 
+$statement = $databaseHandler->query('SELECT * FROM `developer`');
+$developers = $statement->fetchAll();
+
+$statement = $databaseHandler->query('SELECT * FROM `platform`');
+$platforms = $statement->fetchAll();
+
 ?>
 
 <!DOCTYPE html>
@@ -84,14 +90,16 @@ $games = $statement->fetchAll();
                             </td>
                             <td>
                                 <select name="developer">
-                                    <option value="1">Bullfrog Productions</option>
-                                    <option value="2">id Software</option>
+                                    <?php foreach ($developers as $developer): ?>
+                                    <option value="<?= $developer['id'] ?>"><?= $developer['name'] ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </td>
                             <td>
                                 <select name="platform">
-                                    <option value="1">SNES</option>
-                                    <option value="2">MS-DOS</option>
+                                    <?php foreach ($platforms as $platform): ?>
+                                    <option value="<?= $platform['id'] ?>"><?= $platform['name'] ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </td>
                             <td>
