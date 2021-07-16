@@ -1,3 +1,22 @@
+<?php
+
+$databaseHandler = new PDO('mysql:host=localhost;dbname=videogames', 'root', 'root');
+$statement = $databaseHandler->query('SELECT
+    `game`.`id`,
+    `game`.`title`,
+    `game`.`release_date`,
+    `game`.`link`,
+    `developer`.`name` as `developer_name`,
+    `developer`.`link` as `developer_link`,
+    `platform`.`name` as `platform_name`,
+    `platform`.`link` as `platform_link`
+FROM `game`
+JOIN `developer` ON `game`.`developer_id` = `developer`.`id`
+JOIN `platform` ON `game`.`platform_id` = `platform`.`id`');
+$games = $statement->fetchAll();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,17 +46,18 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <?php foreach ($games as $game): ?>
                     <tr>
-                        <th scope="row">1</th>
+                        <th scope="row"><?= $game['id'] ?></th>
                         <td>
-                            <a href="https://en.wikipedia.org/wiki/Populous_(video_game)">Populous</a>
+                            <a href="<?= $game['link'] ?>" target="_blank"><?= $game['title'] ?></a>
                         </td>
-                        <td>5 june 1989</td>
+                        <td><?php $date = new DateTime($game['release_date']); echo $date->format('F j, Y') ?></td>
                         <td>
-                            <a href="https://en.wikipedia.org/wiki/Bullfrog_Productions">Bullfrog Productions</a>
+                            <a href="<?= $game['developer_link'] ?>" target="_blank"><?= $game['developer_name'] ?></a>
                         </td>
                         <td>
-                            <a href="https://en.wikipedia.org/wiki/Amiga">Amiga</a>
+                            <a href="<?= $game['platform_link'] ?>" target="_blank"><?= $game['platform_name'] ?></a>
                         </td>
                         <td>
                             <button class="btn btn-primary btn-sm">
@@ -50,29 +70,7 @@
                             </button>
                         </td>
                     </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>
-                            <a href="https://en.wikipedia.org/wiki/Populous_(video_game)">Doom</a>
-                        </td>
-                        <td>10 December 1993</td>
-                        <td>
-                            <a href="https://en.wikipedia.org/wiki/Bullfrog_Productions">id Software</a>
-                        </td>
-                        <td>
-                            <a href="https://en.wikipedia.org/wiki/MS-DOS">MS-DOS</a>
-                        </td>
-                        <td>
-                            <button class="btn btn-primary btn-sm">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </td>
-                        <td>
-                            <button class="btn btn-danger btn-sm">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </td>
-                    </tr>
+                    <?php endforeach; ?>
                     <form>
                         <tr>
                             <th scope="row"></th>
